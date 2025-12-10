@@ -1,0 +1,1051 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <title>Narratio VerifyFlow™ · Live Demo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    :root {
+      --n-bg: #050509;
+      --n-surface: #111018;
+      --n-surface-soft: #181720;
+      --n-border-subtle: #272532;
+      --n-border-strong: #3a3847;
+      --n-text-main: #f7f4ef;
+      --n-text-muted: #9b95a3;
+      --n-accent: #8B1A1A;
+      --n-accent-soft: rgba(139, 26, 26, 0.18);
+      --n-radius-lg: 18px;
+      --n-radius-md: 14px;
+    }
+
+    * {
+      box-sizing: border-box;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont,
+                   "Helvetica Neue", Arial, sans-serif;
+    }
+
+    body {
+      margin: 0;
+      padding: 0;
+      background: radial-gradient(circle at top, #2b1a22 0, #050509 40%, #010104 100%);
+      color: var(--n-text-main);
+    }
+
+    .shell {
+      max-width: none;
+      margin: 0;
+      background: linear-gradient(135deg, #15131e 0%, #0d0c14 100%);
+      border-radius: 0;
+      border: none;
+      box-shadow: none;
+      overflow: hidden;
+      backdrop-filter: blur(18px);
+      position: relative;
+      padding: 24px 40px 40px;
+    }
+
+    .shell::before {
+      content: "";
+      position: absolute;
+      inset: -25%;
+      background:
+        radial-gradient(circle at 8% 0%, rgba(139, 26, 26, 0.26), transparent 55%),
+        radial-gradient(circle at 80% 20%, rgba(255, 255, 255, 0.06), transparent 55%);
+      opacity: 0.7;
+      pointer-events: none;
+    }
+
+    .shell-inner {
+      position: relative;
+      z-index: 1;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    @media (max-width: 800px) {
+      .shell {
+        padding: 18px 16px 24px;
+      }
+    }
+
+    /* HEADER */
+    .top {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 18px;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 20px;
+    }
+
+    .brand-stack {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .brand-logo-img {
+      width: 280px;
+      height: auto;
+      display: block;
+      margin: 0;
+    }
+
+    .brand-headline {
+      font-size: 24px;
+      font-weight: 600;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      margin: 0;
+    }
+
+    .brand-subheadline {
+      font-size: 13px;
+      color: var(--n-text-muted);
+      margin: 0;
+    }
+
+    .hero-kicker {
+      font-size: 11px;
+      letter-spacing: .16em;
+      text-transform: uppercase;
+      color: var(--n-text-muted);
+      margin-bottom: 4px;
+    }
+
+    .pill-env {
+      padding: 6px 12px;
+      border-radius: 999px;
+      border: 1px solid var(--n-border-strong);
+      background: rgba(10,10,18,0.9);
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 11px;
+      color: var(--n-text-muted);
+    }
+
+    .pill-env-dot {
+      width: 9px;
+      height: 9px;
+      border-radius: 999px;
+      background: #32d583;
+      box-shadow: 0 0 0 4px rgba(50,213,131,0.25);
+    }
+
+    /* LAYOUT */
+    .layout {
+      display: grid;
+      grid-template-columns: minmax(0, 1.1fr) minmax(0, 1.3fr);
+      gap: 22px;
+      margin-top: 8px;
+    }
+
+    @media (max-width: 960px) {
+      .layout {
+        grid-template-columns: minmax(0, 1fr);
+      }
+    }
+
+    .section-title {
+      font-size: 13px;
+      text-transform: uppercase;
+      letter-spacing: .16em;
+      color: var(--n-text-muted);
+      margin-bottom: 10px;
+    }
+
+    .card {
+      background: radial-gradient(circle at 0 0, rgba(255,255,255,0.03), transparent 55%),
+                  var(--n-surface);
+      border-radius: var(--n-radius-md);
+      border: 1px solid var(--n-border-subtle);
+      padding: 16px 16px 18px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .card::before {
+      content: "";
+      position: absolute;
+      inset: -30%;
+      background: radial-gradient(circle at 0 0, rgba(255,255,255,0.06), transparent 55%);
+      opacity: 0.35;
+      pointer-events: none;
+    }
+
+    .card-inner {
+      position: relative;
+      z-index: 1;
+    }
+
+    h2 {
+      font-size: 16px;
+      margin: 0 0 8px;
+    }
+
+    p.muted {
+      font-size: 12px;
+      color: var(--n-text-muted);
+      margin: 0 0 10px;
+    }
+
+    small.helper {
+      font-size: 11px;
+      color: var(--n-text-muted);
+      display: block;
+      margin-top: 4px;
+    }
+
+    /* INPUTS */
+    .input-shell {
+      border-radius: 18px;
+      border: 1px dashed var(--n-border-subtle);
+      background: #111018;
+      padding: 10px 12px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 12px;
+      color: var(--n-text-muted);
+      margin-bottom: 10px;
+    }
+
+    .input-icon {
+      width: 22px;
+      height: 22px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.04);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 13px;
+    }
+
+    input[type="file"] {
+      font-size: 11px;
+      color: var(--n-text-muted);
+      max-width: 100%;
+    }
+
+    textarea {
+      width: 100%;
+      border-radius: 14px;
+      border: 1px solid var(--n-border-subtle);
+      background: #111018;
+      color: var(--n-text-main);
+      padding: 8px 10px;
+      font-size: 12px;
+      resize: vertical;
+    }
+
+    textarea::placeholder {
+      color: rgba(155,149,163,0.7);
+    }
+
+    #claim-input {
+      min-height: 90px;
+      margin-bottom: 10px;
+    }
+
+    #url-input {
+      min-height: 70px;
+      max-height: 120px;
+      margin-top: 4px;
+    }
+
+    .btn-primary {
+      border-radius: 999px;
+      border: 1px solid var(--n-accent);
+      background: var(--n-accent);
+      color: #fdf7f2;
+      padding: 8px 18px;
+      font-size: 12px;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      cursor: pointer;
+      margin-top: 8px;
+    }
+
+    .btn-primary span.icon {
+      width: 18px;
+      height: 18px;
+      border-radius: 999px;
+      background: rgba(0,0,0,0.35);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 11px;
+    }
+
+    .status {
+      font-size: 11px;
+      color: var(--n-text-muted);
+      margin-top: 6px;
+    }
+
+    .status strong {
+      color: #ffffff;
+      font-weight: 500;
+    }
+
+    /* KPI GRID */
+    .kpi-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+      margin-top: 6px;
+    }
+
+    @media (max-width: 600px) {
+      .kpi-grid {
+        grid-template-columns: minmax(0, 1fr);
+      }
+    }
+
+    .kpi {
+      border-radius: 14px;
+      background: #181621;
+      border: 1px solid var(--n-border-subtle);
+      padding: 10px 10px 9px;
+      font-size: 11px;
+    }
+
+    .kpi-label {
+      color: var(--n-text-muted);
+    }
+
+    .kpi-value {
+      display: block;
+      margin-top: 4px;
+      font-size: 18px;
+      font-weight: 600;
+      letter-spacing: .01em;
+    }
+
+    .kpi-tagline {
+      font-size: 11px;
+      color: var(--n-text-muted);
+      margin-top: 2px;
+    }
+
+    /* TABLES */
+    .table-wrap {
+      border-radius: 14px;
+      overflow: hidden;
+      border: 1px solid var(--n-border-subtle);
+      margin-top: 10px;
+      background: #151320;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 12px;
+    }
+
+    thead {
+      background: #1c1a27;
+      color: var(--n-text-muted);
+    }
+
+    th, td {
+      padding: 7px 9px;
+      border-top: 1px solid #262433;
+      text-align: left;
+      vertical-align: top;
+    }
+
+    tbody tr:nth-child(1) td {
+      background: #181623;
+    }
+
+    .badge-soft {
+      display: inline-flex;
+      align-items: center;
+      padding: 2px 8px;
+      border-radius: 999px;
+      font-size: 11px;
+      border: 1px solid var(--n-border-subtle);
+      background: rgba(255,255,255,0.02);
+      color: var(--n-text-muted);
+      gap: 6px;
+    }
+
+    .badge-soft-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 999px;
+      background: var(--n-accent);
+    }
+
+    .insights {
+      font-size: 12px;
+      color: var(--n-text-muted);
+      margin-top: 8px;
+    }
+
+    .insights strong {
+      color: #f7f4ef;
+    }
+
+    .cms-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: 10px;
+    }
+
+    .cms-tag {
+      border-radius: 999px;
+      padding: 3px 9px;
+      font-size: 11px;
+      border: 1px solid var(--n-border-subtle);
+      background: #181621;
+      color: var(--n-text-muted);
+    }
+
+    .cms-tag strong {
+      color: #f7f4ef;
+      font-weight: 500;
+    }
+
+    .overall-score {
+      font-size: 28px;
+      font-weight: 600;
+    }
+
+    .overall-tagline {
+      font-size: 11px;
+      color: var(--n-text-muted);
+      margin-top: 4px;
+    }
+  </style>
+</head>
+<body>
+<div class="shell">
+  <div class="shell-inner">
+
+    <!-- HEADER -->
+    <header class="top">
+      <div class="brand-stack">
+        <img class="brand-logo-img" src="assets/narratio-logo-light.png" alt="Narratio logo" />
+        <h1 class="brand-headline">NARRATIO VERIFYFLOW™</h1>
+        <p class="brand-subheadline">
+          Verificación no binaria, Evidence Graph y TrustScore explicable.
+        </p>
+      </div>
+
+      <div style="text-align:right; min-width:230px;">
+        <div class="hero-kicker">Sandbox en vivo · Solo frontend</div>
+        <div class="pill-env">
+          <span class="pill-env-dot"></span>
+          <span>Entorno de demostración · No se almacenan datos</span>
+        </div>
+      </div>
+    </header>
+
+    <!-- MAIN LAYOUT -->
+    <section class="layout">
+      <!-- LEFT: INPUTS + KPIs -->
+      <div>
+        <div class="section-title">1 · Afirmaciones y fuentes</div>
+        <article class="card">
+          <div class="card-inner">
+            <h2>Afirmaciones a verificar</h2>
+            <p class="muted">
+              Introduce uno o varios párrafos. VerifyFlow™ los segmenta en afirmaciones,
+              identifica las que son verificables y estima su cobertura con las fuentes que añadas.
+            </p>
+
+            <textarea id="claim-input" placeholder="Ejemplo:
+Repsol ha reducido un 18% sus emisiones de alcance 1 y 2 desde 2018.
+El 65% de su consumo eléctrico global procede ya de fuentes renovables.
+La inversión en I+D en 2024 superó los 250 millones de euros."></textarea>
+
+            <div class="input-shell">
+              <div class="input-icon">📁</div>
+              <div style="flex:1;">
+                <div style="font-size:11px; color:var(--n-text-muted); margin-bottom:2px;">
+                  Archivos de evidencia (informes, CSV, PDFs, capturas…)
+                </div>
+                <input id="file-input" type="file" multiple />
+              </div>
+            </div>
+
+            <textarea id="url-input" placeholder="Fuentes online (una por línea), por ejemplo:
+https://ejemplo.com/informe-esg-q3
+https://ejemplo.com/noticia-sobre-renovables
+https://ejemplo.com/resultados-anuales"></textarea>
+            <small class="helper">
+              En esta demo, las URLs se usan como fuentes simbólicas (no se hace petición real por CORS).
+            </small>
+
+            <button id="run-btn" class="btn-primary">
+              <span class="icon">▶</span>
+              Ejecutar VerifyFlow™
+            </button>
+
+            <div id="status" class="status">
+              Esperando texto y fuentes. Añade afirmaciones y al menos una fuente antes de ejecutar VerifyFlow™.
+            </div>
+          </div>
+        </article>
+
+        <div style="height:18px;"></div>
+
+        <article class="card">
+          <div class="card-inner">
+            <h2>Métricas de verificación</h2>
+            <p class="muted">
+              Cómo de verificable es lo que has escrito y qué calidad tiene la cobertura de fuentes
+              antes de entrar en el Evidence Graph.
+            </p>
+
+            <div class="kpi-grid">
+              <div class="kpi">
+                <div class="kpi-label">Afirmaciones detectadas</div>
+                <span id="kpi-claims" class="kpi-value">–</span>
+                <div id="kpi-claims-tag" class="kpi-tagline">
+                  Número de frases tratadas como unidades de verificación.
+                </div>
+              </div>
+              <div class="kpi">
+                <div class="kpi-label">Afirmaciones verificables</div>
+                <span id="kpi-verifiable" class="kpi-value">–</span>
+                <div id="kpi-verifiable-tag" class="kpi-tagline">
+                  Cuántas contienen cifras, fechas o hechos contrastables.
+                </div>
+              </div>
+              <div class="kpi">
+                <div class="kpi-label">Cobertura de fuentes</div>
+                <span id="kpi-coverage" class="kpi-value">–</span>
+                <div id="kpi-coverage-tag" class="kpi-tagline">
+                  Estimación de cobertura entre claims y evidencias disponibles.
+                </div>
+              </div>
+              <div class="kpi">
+                <div class="kpi-label">TrustScore estimado</div>
+                <span id="kpi-trustscore" class="kpi-value">–</span>
+                <div id="kpi-trustscore-tag" class="kpi-tagline">
+                  TrustScore global antes de aplicar reglas específicas por compañía.
+                </div>
+              </div>
+            </div>
+
+            <div class="insights" id="kpi-insights">
+              Cuando ejecutes VerifyFlow™, verás aquí un análisis breve de verificabilidad,
+              equilibrio de fuentes y riesgos para publicar tal cual.
+            </div>
+          </div>
+        </article>
+      </div>
+
+      <!-- RIGHT: EVIDENCE GRAPH + CLAIMS -->
+      <div>
+        <div class="section-title">2 · Evidence Graph y salida para CMS</div>
+
+        <article class="card">
+          <div class="card-inner">
+            <h2>Evidence Graph (vista resumida)</h2>
+            <p class="muted">
+              VerifyFlow™ construye un grafo donde cada afirmación se conecta con las
+              evidencias que la soportan, contradicen o matizan.
+            </p>
+
+            <div class="badge-soft" style="margin-bottom:6px;">
+              <span class="badge-soft-dot"></span>
+              <span id="graph-summary-label">Esperando ejecución de VerifyFlow™…</span>
+            </div>
+
+            <div class="table-wrap">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Resumen del grafo</th>
+                    <th>Valor</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>Nodos de afirmación</td>
+                    <td id="graph-claims">–</td>
+                  </tr>
+                  <tr>
+                    <td>Nodos de fuente (archivos + URLs)</td>
+                    <td id="graph-sources">–</td>
+                  </tr>
+                  <tr>
+                    <td>Enlaces claim↔fuente</td>
+                    <td id="graph-edges">–</td>
+                  </tr>
+                  <tr>
+                    <td>Fuentes de alta confianza (&gt;80/100)</td>
+                    <td id="graph-strong-sources">–</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <div class="insights" id="graph-insights">
+              El grafo permite explicar a un lector o a un auditor qué se ha comprobado,
+              con qué se ha contrastado y qué peso ha tenido cada fuente en el TrustScore.
+            </div>
+          </div>
+        </article>
+
+        <div style="height:18px;"></div>
+
+        <article class="card">
+          <div class="card-inner">
+            <h2>Veredicto por afirmación y salida para CMS</h2>
+            <p class="muted">
+              Cada afirmación se clasifica como verificada, parcialmente soportada, en duda o
+              no verificable, junto con etiquetas listas para tu CMS o workflow interno.
+            </p>
+
+            <div class="table-wrap">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Afirmación (muestra)</th>
+                    <th>Estado</th>
+                    <th>Confianza</th>
+                    <th>Fuentes vinculadas</th>
+                  </tr>
+                </thead>
+                <tbody id="claims-table-body">
+                  <tr>
+                    <td colspan="4">Ejecuta VerifyFlow™ para ver hasta 3 afirmaciones como ejemplo.</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <div class="cms-tags" id="cms-tags">
+              <span class="cms-tag"><strong>estado_publicación:</strong> –</span>
+              <span class="cms-tag"><strong>nivel_riesgo:</strong> –</span>
+              <span class="cms-tag"><strong>disclaimer_sugerido:</strong> –</span>
+              <span class="cms-tag"><strong>timeline_label:</strong> –</span>
+            </div>
+
+            <div style="margin-top:10px;">
+              <span class="overall-score" id="overall-score">–</span>
+              <div class="overall-tagline" id="overall-tagline">
+                Aquí verás una lectura editorial de si el contenido está listo para salir,
+                si necesita matices o si conviene dejarlo solo para uso interno.
+              </div>
+            </div>
+
+          </div>
+        </article>
+      </div>
+    </section>
+  </div>
+</div>
+
+<script>
+  const state = {
+    claimsRaw: "",
+    claims: [],
+    verifiableClaims: [],
+    files: [],
+    urls: [],
+    numericSentences: 0
+  };
+
+  const MAX_TEXT_LEN = 20000;
+
+  const $ = id => document.getElementById(id);
+
+  $('run-btn').addEventListener('click', runVerifyFlow);
+
+  async function runVerifyFlow() {
+    const claimText = $('claim-input').value.trim();
+    const urlLines = $('url-input').value
+      .split('\n')
+      .map(l => l.trim())
+      .filter(l => l.length > 0);
+    const fileInput = $('file-input');
+
+    $('status').innerHTML = 'Ejecutando VerifyFlow™…';
+
+    state.claimsRaw = claimText;
+    state.urls = urlLines.map(u => ({ url: u }));
+    state.files = [];
+
+    if (fileInput.files && fileInput.files.length > 0) {
+      state.files = await Promise.all(Array.from(fileInput.files).map(readFileMetaOnly));
+    }
+
+    parseClaims();
+    const metrics = computeMetrics();
+    updateKpis(metrics);
+    updateGraph(metrics);
+    updateClaimsView(metrics);
+
+    $('status').innerHTML =
+      `VerifyFlow™ procesó ${metrics.claimCount} afirmación(es) con `
+      + `${metrics.verifiable} verificable(s), ${metrics.sourceCount} fuente(s) y `
+      + `${metrics.numericSentences} fragmento(s) numérico(s) detectado(s).`;
+  }
+
+  function readFileMetaOnly(file) {
+    return new Promise((resolve) => {
+      const type = file.type || "application/octet-stream";
+      const lowerName = file.name.toLowerCase();
+      let category = "other";
+
+      if (lowerName.endsWith('.csv')) category = "csv";
+      else if (lowerName.endsWith('.txt') || lowerName.endsWith('.md') || lowerName.endsWith('.log')) category = "text";
+      else if (lowerName.endsWith('.json')) category = "json";
+      else if (lowerName.endsWith('.pdf')) category = "pdf";
+      else if (type.startsWith('image/')) category = "image";
+      else if (type.startsWith('video/')) category = "video";
+      else if (type.startsWith('audio/')) category = "audio";
+
+      // Solo usamos metadatos, no contenido completo (es una demo)
+      resolve({
+        name: file.name,
+        type,
+        size: file.size,
+        category
+      });
+    });
+  }
+
+  function parseClaims() {
+    const text = state.claimsRaw || "";
+    let trimmed = text;
+    if (trimmed.length > MAX_TEXT_LEN) {
+      trimmed = trimmed.slice(0, MAX_TEXT_LEN);
+    }
+
+    const sentences = trimmed
+      .split(/[\.\?\!]\s+/)
+      .map(s => s.trim())
+      .filter(Boolean);
+
+    state.claims = sentences;
+
+    const numeric = sentences.filter(s => /\d/.test(s));
+    state.verifiableClaims = numeric;
+    state.numericSentences = numeric.length;
+  }
+
+  function computeMetrics() {
+    const claimCount = state.claims.length;
+    const verifiable = state.verifiableClaims.length;
+    const files = state.files;
+    const urls = state.urls;
+
+    const sourceCount = files.length + urls.length;
+    let structuredSources = 0;
+    let mediaSources = 0;
+
+    files.forEach(f => {
+      if (f.category === "csv" || f.category === "json") structuredSources++;
+      if (f.category === "image" || f.category === "video" || f.category === "audio") mediaSources++;
+    });
+
+    const numericSentences = state.numericSentences;
+
+    // Cobertura: cuántas evidencias por afirmación verificable
+    const coverageRaw = (sourceCount * 1.5 + structuredSources * 2 + mediaSources) /
+                        Math.max(1, verifiable);
+    let coverage = Math.min(1, coverageRaw / 3); // 0–1
+    const coveragePct = Math.round(coverage * 100);
+
+    // Calidad de fuentes: premia mezcla de URLs, CSV/PDF y media
+    const diversityBuckets =
+      (structuredSources > 0 ? 1 : 0) +
+      (mediaSources > 0 ? 1 : 0) +
+      (urls.length > 0 ? 1 : 0) +
+      (files.length - structuredSources - mediaSources > 0 ? 1 : 0);
+    const diversityScore = Math.min(100, diversityBuckets * 22 + urls.length * 3);
+
+    // Verificabilidad: cuántas claims son cuantificables
+    const verifRatio = claimCount > 0 ? verifiable / claimCount : 0;
+    const verifScore = Math.round(40 + verifRatio * 50 + Math.min(numericSentences, 20) * 1.2);
+
+    // TrustScore: mezcla verificabilidad, cobertura y diversidad
+    let trustScore =
+      verifScore * 0.4 +
+      coveragePct * 0.3 +
+      diversityScore * 0.3;
+
+    if (trustScore > 99) trustScore = 99;
+    if (trustScore < 20) trustScore = 20;
+
+    // Evidence graph
+    const edges = Math.min( claimCount * sourceCount, 120 );
+    const strongSources = Math.max(0, Math.min(sourceCount,
+      Math.round(sourceCount * (0.3 + verifRatio * 0.4))
+    ));
+
+    return {
+      claimCount,
+      verifiable,
+      sourceCount,
+      files,
+      urls,
+      structuredSources,
+      mediaSources,
+      numericSentences,
+      coveragePct,
+      diversityScore,
+      verifScore,
+      trustScore: Math.round(trustScore),
+      graph: {
+        claims: claimCount,
+        sources: sourceCount,
+        edges,
+        strongSources
+      }
+    };
+  }
+
+  function updateKpis(m) {
+    $('kpi-claims').textContent = m.claimCount || "0";
+    $('kpi-verifiable').textContent = m.verifiable || "0";
+    $('kpi-coverage').textContent = m.coveragePct + " %";
+    $('kpi-trustscore').textContent = m.trustScore + " / 100";
+
+    // Tags
+    $('kpi-claims-tag').textContent =
+      m.claimCount === 0
+        ? "No hay texto suficiente para segmentar en afirmaciones."
+        : "Todas las frases que el sistema trataría como unidades de verificación.";
+
+    $('kpi-verifiable-tag').textContent =
+      m.verifiable === 0
+        ? "Ninguna afirmación contiene cifras o hechos claramente contrastables."
+        : "Afirmaciones que contienen números, fechas, tasas o hechos comparables con datos.";
+
+    let covMsg;
+    if (m.coveragePct >= 80) covMsg = "Las evidencias son suficientes para cubrir la mayoría de afirmaciones cuantificables.";
+    else if (m.coveragePct >= 55) covMsg = "Cobertura razonable: hay buena base, pero algunas afirmaciones quedarán más débiles.";
+    else if (m.coveragePct > 0) covMsg = "Cobertura escasa: el grafo tendrá huecos y claims con soporte limitado.";
+    else covMsg = "Sin fuentes conectables: VerifyFlow™ solo puede marcar el contenido como no verificable.";
+
+    $('kpi-coverage-tag').textContent = covMsg;
+
+    let trustMsg;
+    if (m.trustScore >= 90) trustMsg = "Perfil de verificación muy sólido. El contenido es candidato a SourceBadge™ público.";
+    else if (m.trustScore >= 80) trustMsg = "Base fuerte: se recomienda publicar con matices localizados y trazabilidad visible.";
+    else if (m.trustScore >= 65) trustMsg = "Zona gris. Mejor revisar claims sensibles o limitar este contenido a entornos internos.";
+    else trustMsg = "Riesgo alto de mensajes poco soportados. Requiere refuerzo de evidencia antes de hacerlos públicos.";
+
+    $('kpi-trustscore-tag').textContent = trustMsg;
+
+    const insights = [];
+    if (m.claimCount === 0) {
+      insights.push("Añade al menos una frase para que VerifyFlow™ pueda extraer afirmaciones.");
+    } else {
+      insights.push(
+        `El texto contiene <strong>${m.claimCount}</strong> afirmación(es), de las cuales `
+        + `<strong>${m.verifiable}</strong> son cuantificables o claramente contrastables.`
+      );
+    }
+    insights.push(
+      `Se han contabilizado <strong>${m.sourceCount}</strong> fuente(s) de evidencia `
+      + `(archivos y URLs), con una cobertura estimada del `
+      + `<strong>${m.coveragePct}%</strong> sobre las afirmaciones verificables.`
+    );
+    insights.push(
+      `El TrustScore estimado es de <strong>${m.trustScore}/100</strong>, combinando `
+      + `verificabilidad, diversidad de fuentes y cobertura del Evidence Graph.`
+    );
+
+    $('kpi-insights').innerHTML = insights.join(' ');
+  }
+
+  function updateGraph(m) {
+    $('graph-claims').textContent = m.graph.claims || "0";
+    $('graph-sources').textContent = m.graph.sources || "0";
+    $('graph-edges').textContent = m.graph.edges || "0";
+    $('graph-strong-sources').textContent = m.graph.strongSources || "0";
+
+    const label = m.graph.claims + m.graph.sources === 0
+      ? "Esperando evidencia para construir el grafo…"
+      : `Grafo con ${m.graph.claims} nodo(s) de afirmación y ${m.graph.sources} de fuente, `
+        + `conectados mediante ${m.graph.edges} enlace(s) claim↔fuente.`;
+
+    $('graph-summary-label').textContent = label;
+
+    const insights = [];
+    if (m.graph.sources === 0) {
+      insights.push(
+        "Sin fuentes no es posible explicar el razonamiento de la IA. El grafo quedaría vacío "
+        + "y el sistema marcaría el contenido como no verificable."
+      );
+    } else {
+      insights.push(
+        `El grafo asigna mayor peso a <strong>${m.graph.strongSources}</strong> fuente(s) de alta confianza `
+        + `y reparte menor peso entre el resto, lo que permite explicar por qué algunas afirmaciones `
+        + `suben o bajan de confianza.`
+      );
+    }
+    insights.push(
+      "En producción, esta vista se traduce en un Evidence Graph navegable y, opcionalmente, "
+      + "en un endpoint de trazabilidad pública o un SourceBadge™ embebible."
+    );
+
+    $('graph-insights').innerHTML = insights.join(' ');
+  }
+
+  function updateClaimsView(m) {
+    const tbody = $('claims-table-body');
+    tbody.innerHTML = "";
+
+    if (m.claimCount === 0) {
+      const tr = document.createElement('tr');
+      tr.innerHTML = `<td colspan="4">Añade texto arriba y ejecuta VerifyFlow™ para ver ejemplos de veredicto por afirmación.</td>`;
+      tbody.appendChild(tr);
+      updateCmsTags(m, "no_text");
+      $('overall-score').textContent = "–";
+      $('overall-tagline').textContent =
+        "Sin texto verificable, VerifyFlow™ solo puede señalar que no hay contenido sobre el que emitir un TrustScore.";
+      return;
+    }
+
+    const sampleClaims = state.claims.slice(0, 3);
+    const verdicts = classifyClaims(sampleClaims, m);
+
+    verdicts.forEach(v => {
+      const tr = document.createElement('tr');
+      tr.innerHTML = `
+        <td>${escapeHtml(v.text)}</td>
+        <td>${v.statusLabel}</td>
+        <td>${v.confidence}/100</td>
+        <td>${v.sourcesLinked}</td>
+      `;
+      tbody.appendChild(tr);
+    });
+
+    updateCmsTags(m, verdicts.globalState);
+
+    $('overall-score').textContent = m.trustScore + " / 100";
+    $('overall-tagline').textContent = verdicts.globalMessage;
+  }
+
+  function classifyClaims(claims, m) {
+    const verdicts = [];
+    let verified = 0, partial = 0, doubtful = 0;
+
+    claims.forEach((text, idx) => {
+      const hasNumber = /\d/.test(text);
+      const lenScore = Math.min(1, text.length / 140);
+      const coverageFactor = m.coveragePct / 100;
+
+      let confidence = 40 + lenScore * 20 + coverageFactor * 40;
+      if (!hasNumber) confidence -= 15;
+
+      if (confidence > 98) confidence = 98;
+      if (confidence < 25) confidence = 25;
+      confidence = Math.round(confidence);
+
+      let status;
+      if (!hasNumber && m.sourceCount < 2) status = "not_verifiable";
+      else if (confidence >= 80 && coverageFactor >= 0.6) status = "verified";
+      else if (confidence >= 60) status = "partial";
+      else status = "doubtful";
+
+      if (status === "verified") verified++;
+      if (status === "partial") partial++;
+      if (status === "doubtful") doubtful++;
+
+      let statusLabel;
+      if (status === "verified") statusLabel = "Verificada";
+      else if (status === "partial") statusLabel = "Parcialmente soportada";
+      else if (status === "doubtful") statusLabel = "En duda / evidencia débil";
+      else statusLabel = "No verificable";
+
+      const linkedSources = Math.max(1, Math.round(m.sourceCount * (0.4 + coverageFactor)));
+      verdicts.push({
+        text,
+        status,
+        statusLabel,
+        confidence,
+        sourcesLinked: linkedSources
+      });
+    });
+
+    let globalState;
+    let message;
+
+    if (m.trustScore >= 85 && verified >= partial && doubtful === 0) {
+      globalState = "green";
+      message =
+        "La mayoría de afirmaciones clave se consideran verificadas con buena cobertura de fuentes. " +
+        "El contenido es apto para publicación con SourceBadge™ y trazabilidad abierta.";
+    } else if (m.trustScore >= 70) {
+      globalState = "yellow";
+      message =
+        "El núcleo del mensaje se sostiene, pero hay afirmaciones que conviene matizar o acompañar " +
+        "de un breve disclaimer. Recomendado para publicación con trazabilidad accesible.";
+    } else {
+      globalState = "red";
+      message =
+        "El perfil de verificación es desigual: varias afirmaciones se consideran en duda o poco soportadas. " +
+        "Tiene sentido usar este contenido en entornos internos o reforzarlo antes de salir a público.";
+    }
+
+    verdicts.globalState = globalState;
+    verdicts.globalMessage = message;
+    return verdicts;
+  }
+
+  function updateCmsTags(m, globalState) {
+    const tagsContainer = $('cms-tags');
+    tagsContainer.innerHTML = "";
+
+    let estadoPublicacion, nivelRiesgo, disclaimer, timeline;
+
+    if (globalState === "no_text") {
+      estadoPublicacion = "draft_sin_contenido";
+      nivelRiesgo = "n/a";
+      disclaimer = "false";
+      timeline = "n/a";
+    } else if (globalState === "green") {
+      estadoPublicacion = "publicado_con_sourcebadge";
+      nivelRiesgo = "bajo";
+      disclaimer = m.trustScore >= 90 ? "false" : "true";
+      timeline = "listo_para_Q" + inferQuarter();
+    } else if (globalState === "yellow") {
+      estadoPublicacion = "publicado_con_disclaimer";
+      nivelRiesgo = "medio";
+      disclaimer = "true";
+      timeline = "prioridad_revision_Q" + inferQuarter();
+    } else {
+      estadoPublicacion = "solo_uso_interno";
+      nivelRiesgo = "alto";
+      disclaimer = "true";
+      timeline = "revisar_antes_de_publicar";
+    }
+
+    tagsContainer.innerHTML = `
+      <span class="cms-tag"><strong>estado_publicación:</strong> ${estadoPublicacion}</span>
+      <span class="cms-tag"><strong>nivel_riesgo:</strong> ${nivelRiesgo}</span>
+      <span class="cms-tag"><strong>disclaimer_sugerido:</strong> ${disclaimer}</span>
+      <span class="cms-tag"><strong>timeline_label:</strong> ${timeline}</span>
+    `;
+  }
+
+  function inferQuarter() {
+    const now = new Date();
+    const m = now.getMonth(); // 0–11
+    return (Math.floor(m / 3) + 1); // 1–4
+  }
+
+  function escapeHtml(str) {
+    return String(str)
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;');
+  }
+</script>
+</body>
+</html>
